@@ -1,0 +1,10 @@
+.carousel .slide img {
+    height: 100%;  /* change this to whatever you want */
+    width: 100%;
+}
+.carousel {
+   
+    border-radius: 20px;
+    width: 70% !important;
+    height: 500px !important;
+}
