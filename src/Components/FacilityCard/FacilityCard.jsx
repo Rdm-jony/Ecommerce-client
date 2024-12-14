@@ -1,7 +1,7 @@
 
 const FacilityCard = ({ image, title }) => {
     return (
-        <div className="flex gap-5 p-5 rounded-lg group bg-gray-100">
+        <div className="flex gap-5 p-5 rounded-lg group bg-gray-100 dark:bg-dark">
             <img className="w-10 group-hover:mb-3 transition-all duration-500" src={image} alt="" />
             <div>
                 <p className="font-semibold">{title}</p>

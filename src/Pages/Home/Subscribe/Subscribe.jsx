@@ -3,7 +3,7 @@ import subsImg from '../../../assets/newsletter.png'
 
 const Subscribe = () => {
     return (
-        <div className='flex h-[350px] items-center bg-cyan-100 justify-between rounded-lg'>
+        <div className='flex h-[350px] items-center bg-cyan-100 dark:bg-dark justify-between rounded-lg'>
 
             <div className='w-6/12 p-16 space-y-4'>
                 <h2 className='text-4xl font-semibold'>Stay home & get your daily <br />

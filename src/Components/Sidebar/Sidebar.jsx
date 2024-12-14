@@ -70,7 +70,7 @@ const Sidebar = () => {
 
             <div className="flex flex-col justify-between   flex-1 mt-6  ">
                 <div className='sticky top-20'>
-                    <div className={`shadow-xl p-5 border-2 rounded-lg sticky`}>
+                    <div className={`shadow-xl p-5 border-2 rounded-lg dark:bg-dark`}>
                         <h2 className="font-semibold text-xl">Category</h2>
                         <div className="divider after::w-1/3 before:bg-primary before:w-2/3"></div>
                         <nav className="flex-1 -mx-3 space-y-3 max-h-60 overflow-auto">
@@ -86,7 +86,7 @@ const Sidebar = () => {
 
                         </nav>
                     </div>
-                    <div className='shadow-xl p-5 border-2 rounded-lg mt-10 sticky'>
+                    <div className='shadow-xl p-5 border-2 dark:bg-dark rounded-lg mt-10 sticky'>
                         <h2 className="font-semibold text-xl">Filter by price</h2>
                         <div className="divider after::w-1/3 before:bg-primary before:w-2/3"></div>
                         <Slider

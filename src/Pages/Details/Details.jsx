@@ -35,8 +35,8 @@ const Details = () => {
         setCount(count)
     }
     return (
-        <div className="">
-            <div className='flex'>
+        <div>
+            <div className='flex dark:bg-dark'>
                 <div className="w-1/2 flex flex-col items-center">
                     <div className='w-2/3'>
                         <InnerImageZoom zoomType='hover' className='w-full rounded-lg h-[450px]' src={image} alt="" />
@@ -113,7 +113,7 @@ const Details = () => {
                     </div>
                 </div>
             </div>
-            <div className='border-2 p-16 my-10'>
+            <div className='border-2 p-16 my-10 dark:bg-dark'>
                 <div className='flex gap-20'>
                     <button onClick={() => setIsActiveInfo(0)} className={`btn btn-outline hover:bg-gray-100 hover:text-black ${isActiveInfo == 0 ? 'text-primary' : ''}`}>Description</button>
                     <button onClick={() => setIsActiveInfo(1)} className={`btn btn-outline hover:bg-gray-100 hover:text-black ${isActiveInfo == 1 ? 'text-primary' : ''}`}>Addtional Info</button>

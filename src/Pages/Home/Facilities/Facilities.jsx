@@ -8,7 +8,7 @@ import returnImg from '../../../assets/deal/return.svg'
 
 const Facilities = () => {
     return (
-        <div className="flex justify-between">
+        <div className="flex justify-between ">
             <FacilityCard title='Best prices & offers' image={offerImg}></FacilityCard>
             <FacilityCard title='
             Free delivery' image={deliveryImg}></FacilityCard>
