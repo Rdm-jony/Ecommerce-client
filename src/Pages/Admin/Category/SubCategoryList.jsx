@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaHome } from 'react-icons/fa';
 import AdminBaredCrumb from '../../../Components/Admin/AdminBreadCrumb/AdminBaredCrumb';
-import useGetDataPublic from '../../../Hooks/useGetDataPublic';
 import BtnLoader from '../../../Components/BtnLoader/BtnLoader';
 import SubCategoryTableRow from '../../../Components/Admin/SubCategoryTableRow/SubCategoryTableRow';
+import { useGetSubCategoryQuery } from '../../../Redux/api/baseApi';
 
 const SubCategoryList = () => {
-    const [data, loading, refetch] = useGetDataPublic('subCategory', '/category/subCategory',[])
-    if (loading) {
+    const { data: subCategories, isLoading, refetch } = useGetSubCategoryQuery()
+
+    useEffect(() => {
+        refetch()
+    }, [])
+
+    if (isLoading) {
         return <BtnLoader></BtnLoader>
     }
-    console.log(data)
     return (
-        <div>
+        <div className='w-full'>
             <AdminBaredCrumb title='Category List'>
                 <li><a className="bg-gray-100 dark:bg-black p-2 rounded-full"> <FaHome className="mr-2"></FaHome> Dashboard</a></li>
                 <li><a className="bg-gray-100 dark:bg-black p-2 rounded-full">Category</a></li>
@@ -29,7 +33,7 @@ const SubCategoryList = () => {
                     </thead>
                     <tbody>
                         {
-                            data?.map((category,idx)=><SubCategoryTableRow category={category} refetch={refetch} index={idx} key={category._id}></SubCategoryTableRow>)
+                            subCategories?.map((category, idx) => <SubCategoryTableRow refetch={refetch} category={category} index={idx} key={category._id}></SubCategoryTableRow>)
                         }
 
                     </tbody>

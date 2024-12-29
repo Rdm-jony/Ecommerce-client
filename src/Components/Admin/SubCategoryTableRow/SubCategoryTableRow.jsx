@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Swal from 'sweetalert2';
-import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+import { useDeleteSubCategoryMutation } from '../../../Redux/api/baseApi';
+import { toast } from 'react-toastify';
 
-const SubCategoryTableRow = ({ category, index,refetch }) => {
-    const axios=useAxiosPublic()
-    const { categoryImg, categoryName, categoryColor, subCategory,_id } = category;
+const SubCategoryTableRow = ({ category, index, refetch }) => {
+    const [deleteSubCategory] = useDeleteSubCategoryMutation()
+    const { categoryImg, categoryName, categoryColor, subCategory, _id } = category;
     const handleDelete = (sub) => {
         Swal.fire({
             title: "Are you sure?",
@@ -14,21 +15,19 @@ const SubCategoryTableRow = ({ category, index,refetch }) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                const {data}=await axios.delete(`/category/subCategory/${_id}?sub=${sub}`)
-                if(data.modifiedCount>0){
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: `${sub} has been deleted.`,
-                        icon: "success"
-                    });
+                const data = await deleteSubCategory({ _id, subCategory: sub }).unwrap()
+                if (data?.modifiedCount > 0) {
+                    toast.success(`${sub} deleted from category ${categoryName}`)
                     refetch()
                 }
             }
-           
+
         });
     }
+
+
     return (
         <tr className={`${index % 2 == 0 ? 'dark:bg-dark dark:bg-opacity-50' : 'bg-slate-50 dark:bg-dark'}`}>
             <td class="border border-slate-300 pl-5 w-3/12">
@@ -40,7 +39,7 @@ const SubCategoryTableRow = ({ category, index,refetch }) => {
             <td className='border border-slate-300'>
                 <div className='flex gap-5'>
                     {
-                        subCategory.map((category, idx) => <div key={idx} className='bg-primary px-2 py-1 text-xs rounded-md text-white'><span className='mr-2 uppercase'>{category}</span><span onClick={()=>handleDelete(category)} className='cursor-pointer'>x</span></div>)
+                        subCategory.map((sub, idx) => <div key={idx} className='bg-primary px-2 py-1 text-xs rounded-md text-white'><span className='mr-2 uppercase'>{sub}</span><span onClick={() => handleDelete(sub)} className='cursor-pointer'>x</span></div>)
                     }
                 </div>
             </td>

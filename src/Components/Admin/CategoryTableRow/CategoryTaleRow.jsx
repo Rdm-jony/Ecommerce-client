@@ -2,11 +2,12 @@ import React from 'react';
 import { MdDelete, MdModeEditOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
-import useAxiosPublic from '../../../Hooks/useAxiosPublic';
+import { useDeleteCategoryMutation } from '../../../Redux/api/baseApi';
+import { toast } from 'react-toastify';
 
 
-const CategoryTaleRow = ({ category, index,refetch }) => {
-    const axios=useAxiosPublic()
+const CategoryTaleRow = ({ category, index, refetch }) => {
+    const [deleteCategory] = useDeleteCategoryMutation()
     const { categoryName, categoryColor, categoryImg, _id } = category;
     const handleDelete = () => {
         Swal.fire({
@@ -17,19 +18,15 @@ const CategoryTaleRow = ({ category, index,refetch }) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then(async(result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                const {data}=await axios.delete(`/category/${_id}`)
-                if(data.deletedCount==1){
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: `${categoryName} has been deleted.`,
-                        icon: "success"
-                    });
+                const data = await deleteCategory(_id).unwrap()
+                if (data?.deletedCount == 1) {
+                    toast.success(`${categoryName} successFully deleted!`)
                     refetch()
                 }
             }
-           
+
         });
     }
     return (

@@ -1,8 +1,8 @@
 
-const Description = () => {
+const Description = ({description}) => {
     return (
         <div>
-            <p className="text-light">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.</p>
+            <p className="text-light">{description}</p>
         </div>
     );
 };

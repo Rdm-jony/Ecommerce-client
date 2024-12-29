@@ -14,7 +14,7 @@ const Theme = () => {
     }, [theme])
 
     const handleTheme = (e) => {
-        console.log()
+        
         if (e.target.checked) {
             setTheme("dark")
         } else {

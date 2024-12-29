@@ -1,8 +1,11 @@
 import { BiCategory } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdHeadphones } from "react-icons/md";
+import useGetDataPublic from "../../Hooks/useGetDataPublic";
 
 const Navbar = () => {
+    const [data, loading, refetch] = useGetDataPublic('category', '/category', [])
+
     return (
         <div className="navbar bg-base-100 dark:bg-dark sticky top-0 z-20">
             <div className="navbar-start">
@@ -25,26 +28,17 @@ const Navbar = () => {
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                         <li><a>Home</a></li>
-                        <li>
+                        {/* <li>
                             <a>Fashion</a>
                             <ul className="p-2">
                                 <li><a>Man</a></li>
                                 <li><a>Woman</a></li>
                             </ul>
-                        </li>
-                        <li>
-                            <a>Electronics</a>
-                            <ul className="p-2">
-                                <li><a>Mobile</a></li>
-                                <li><a>Laptop</a></li>
-                                <li><a>Smart Watch</a></li>
-                                <li><a>Cameras</a></li>
-                            </ul>
-                        </li>
-                        <li><a>Bags</a></li>
-                        <li><a>Footwear</a></li>
-                        <li><a>Groceries</a></li>
-                        <li><a>Beauty</a></li>
+                        </li> */}
+
+                        {
+                            data?.map(cat => <li key={cat._id}><a>{cat?.categoryName}</a></li>)
+                        }
 
                     </ul>
                 </div>
@@ -60,32 +54,23 @@ const Navbar = () => {
 
             </div>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
+                <ul className="menu menu-horizontal ">
                     <li><a>Home</a></li>
-                    <li>
-                        <details>
-                            <summary>Fashion</summary>
-                            <ul className="p-2">
-                                <li><a>Man</a></li>
-                                <li><a>Woman</a></li>
-                            </ul>
-                        </details>
-                    </li>
-                    <li>
-                        <details>
-                            <summary>Electronics</summary>
-                            <ul className="p-2">
-                                <li><a>Mobile</a></li>
-                                <li><a>Laptop</a></li>
-                                <li><a>Smart Watch</a></li>
-                                <li><a>Cameras</a></li>
-                            </ul>
-                        </details>
-                    </li>
-                    <li><a>Bags</a></li>
-                    <li><a>Footwear</a></li>
-                    <li><a>Groceries</a></li>
-                    <li><a>Beauty</a></li>
+                    {
+                        data?.map(cat => <li key={cat._id}>
+                            {
+                                cat?.subCategory?.length > 0 ? <details>
+                                    <summary>{cat?.categoryName}</summary>
+                                    <ul className="p-2">
+                                        {
+                                            cat?.subCategory?.map(sub => <li><a>{sub}</a></li>)
+                                        }
+
+                                    </ul>
+                                </details> : <a>{cat?.categoryName}</a>
+                            }
+                        </li>)
+                    }
                 </ul>
             </div>
             <div className="navbar-end gap-5">

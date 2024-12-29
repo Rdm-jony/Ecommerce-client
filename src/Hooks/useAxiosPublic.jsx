@@ -5,7 +5,7 @@ const instance = axios.create({
 
 });
 const useAxiosPublic = () => {
-    
+
     return instance;
 };
 

@@ -4,7 +4,7 @@ import useAxiosPublic from './useAxiosPublic';
 
 const axios=useAxiosPublic()
 const useGetDataPublic = (key,route,dependecies) => {
-    console.log(dependecies)
+   
     const {data,isLoading:loading,refetch}=useQuery({
         queryKey:[key,...dependecies],
         queryFn:async()=>{

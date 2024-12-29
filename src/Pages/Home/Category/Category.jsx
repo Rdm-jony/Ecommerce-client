@@ -1,56 +1,12 @@
-import fashionImg from '../../../assets/category/fashion.webp'
-import electronicImg from '../../../assets/category/electronics.webp'
-import bagImg from '../../../assets/category/bags.webp'
-import footImg from '../../../assets/category/footwear.webp'
-import groceryImg from '../../../assets/category/groceries.webp'
-import beautyImg from '../../../assets/category/beauty.webp'
-import wellImg from '../../../assets/category/wellness.webp'
-import jwlleryImg from '../../../assets/category/jwellery.webp'
+
+import useGetDataPublic from '../../../Hooks/useGetDataPublic'
+import BtnLoader from '../../../Components/BtnLoader/BtnLoader'
 
 const Category = () => {
-    const categoryImages = [
-        {
-            image: fashionImg,
-            name: 'Fashion',
-            bgColor: '#ECFFEC'
-        },
-        {
-            image: electronicImg,
-            name: 'Electronics',
-            bgColor: '#FEEFEA'
-        },
-        {
-
-            image: bagImg,
-            name: 'Bags',
-            bgColor: '#FDF0FF'
-        },
-        {
-            image: footImg,
-            name: 'Footwear',
-            bgColor: '#DEF3FF'
-        },
-        {
-            image: groceryImg,
-            name: 'Groceries',
-            bgColor: '#FFE8F8'
-        },
-        {
-            image: beautyImg,
-            name: "Beauty",
-            bgColor: '#E3FFFA'
-        },
-        {
-            image: wellImg,
-            name: 'Wellness',
-            bgColor: '#FFF3FF'
-        },
-        {
-            image: jwlleryImg,
-            name: "Jewellery",
-            bgColor: '#D3FFD9'
-        }
-    ]
+    const [data, loading, refetch] = useGetDataPublic('category', '/category', [])
+    if (loading) {
+        return <BtnLoader></BtnLoader>
+    }
 
     return (
         <div>
@@ -58,11 +14,11 @@ const Category = () => {
             </h2>
             <div className='flex justify-between mt-5'>
                 {
-                    categoryImages.map((cat, idx) => <div key={idx}>
-                        <div style={{ backgroundColor: cat.bgColor }} className={`rounded-full hover:scale-110  hover:shadow-xl hover:border-4  transition-all duration-500 border-2 p-5 w-28 h-28 shadow-lg flex justify-center items-center`}>
-                            <img src={cat.image} alt="" />
+                    data?.map((cat, idx) => <div key={idx}>
+                        <div style={{ backgroundColor: cat?.categoryColor }} className={`rounded-full hover:scale-110  hover:shadow-xl hover:border-4  transition-all duration-500 border-2 p-5 w-28 h-28 shadow-lg flex justify-center items-center`}>
+                            <img src={cat?.categoryImg} alt="" />
                         </div>
-                        <p className='text-center mt-5 font-semibold'>{cat.name}</p>
+                        <p className='text-center mt-5 font-semibold uppercase'>{cat?.categoryName}</p>
                     </div>)
                 }
             </div>

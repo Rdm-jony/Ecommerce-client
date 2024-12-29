@@ -12,6 +12,9 @@ import Cart from "../Pages/Cart/Cart";
 import EditCategory from "../Pages/Admin/Category/EditCategory";
 import AddSubCategory from "../Pages/Admin/Category/AddSubCategory";
 import SubCategoryList from "../Pages/Admin/Category/SubCategoryList";
+import Drawer from "../Pages/Drawer";
+import ProductUpload from "../Pages/Admin/Products/ProductUpload";
+import ProductList from "../Pages/Admin/Products/ProductList";
 
 export const router = createBrowserRouter([
     {
@@ -38,6 +41,10 @@ export const router = createBrowserRouter([
             {
                 path: "carts",
                 element: <Cart></Cart>
+            },
+            {
+                path: '/drawer',
+                element: <Drawer></Drawer>
             }
         ]
     }, {
@@ -63,11 +70,23 @@ export const router = createBrowserRouter([
             {
                 path: 'subCategory/add',
                 element: <AddSubCategory></AddSubCategory>
-            },{
-                path:'subCategory',
-                element:<SubCategoryList></SubCategoryList>
-            }
+            }, {
+                path: 'subCategory',
+                element: <SubCategoryList></SubCategoryList>
+            }, {
+                path: 'product/add',
+                element: <ProductUpload></ProductUpload>
+            },
+            {
+                path: 'productList',
+                element: <ProductList></ProductList>
+            },
+            {
+                path: "products/:id",
+                element: <Details></Details>
+            },
         ]
-    }
+    },
+
 
 ])

@@ -1,8 +1,10 @@
 import React from 'react';
 import { FaRegStar, FaStar } from 'react-icons/fa';
 import Rating from 'react-rating';
+import { useLocation, useParams } from 'react-router-dom';
 
 const ReviewCard = () => {
+    
     return (
         <div className="flex justify-between border-2 p-5 rounded-xl">
             <div>

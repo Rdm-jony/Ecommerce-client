@@ -9,7 +9,7 @@ const ProductsCard = () => {
         <div className="card bg-base-100 dark:bg-dark group border-2 dark:border-gray-400 transition-all duration-600 hover:drop-shadow-xl hover:shadow-black ">
             <figure className="h-60 relative ">
                 <img className="h-fit w-full group-hover:scale-110 transition-all duration-500"
-                    src="https://res.cloudinary.com/dkgonwhvj/image/upload/v1731423981/1731423977451_siril-poly-silk-grey-off-white-color-saree-with-blouse-piece-product-images-rvcpwdyagl-0-202304220521.webp"
+                    src="https://res.cloudinary.com/dkw66kfyw/image/upload/v1735481897/fzeroxyvjtuhw2kh9orw.webp"
                     alt="Shoes" />
 
                 <div className="absolute  flex -z-10 group-hover:z-10 transition-all duration-500
