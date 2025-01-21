@@ -3,9 +3,36 @@ import { FaRegEye, FaRegStar, FaStar } from 'react-icons/fa';
 import { MdDelete, MdModeEditOutline } from 'react-icons/md';
 import Rating from 'react-rating';
 import { Link } from 'react-router-dom';
+import { useDeleteProductsByIdMutation } from '../../../Redux/api/baseApi';
+import Swal from 'sweetalert2';
 
 const ProductTableRow = ({ product, index }) => {
+    const [setDeleteProduct, { data }] = useDeleteProductsByIdMutation()
     const { productName, productCategory, productImage, price, oldPrice, brand, rating, subCategory, _id } = product;
+
+    const handlDeleteProduct = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const result = await setDeleteProduct(_id).unwrap()
+                if (result?.deletedCount == 1)
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: `${productName} deleted succefully`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+            }
+        });
+    }
     return (
         <tr className={`${index % 2 == 0 ? 'dark:bg-dark dark:bg-opacity-50' : 'bg-slate-50 dark:bg-dark'}`}>
             <td className="border border-slate-300 pl-5 h-20">
@@ -46,13 +73,13 @@ const ProductTableRow = ({ product, index }) => {
                             <FaRegEye className='text-white' />
                         </div>
                     </Link>
-                    <Link>
+                    <Link to={`../product/update/${_id}`}>
                         <div className='w-7 h-7 rounded-sm cursor-pointer bg-primary flex justify-center items-center'>
                             <MdModeEditOutline className='text-white' />
                         </div>
                     </Link>
 
-                    <div className='w-7 h-7 cursor-pointer rounded-sm bg-error flex justify-center items-center'>
+                    <div onClick={handlDeleteProduct} className='w-7 h-7 cursor-pointer rounded-sm bg-error flex justify-center items-center'>
                         <MdDelete className='text-white' />
                     </div>
                 </div>

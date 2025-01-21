@@ -2,8 +2,13 @@ import { BiCategory } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdHeadphones } from "react-icons/md";
 import useGetDataPublic from "../../Hooks/useGetDataPublic";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategory, setSubCategory } from "../../Redux/Features/ProuctListingSlice";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
+    const disPatch = useDispatch()
+    const { category } = useSelector((state) => state.productListingSlice)
     const [data, loading, refetch] = useGetDataPublic('category', '/category', [])
 
     return (
@@ -28,13 +33,7 @@ const Navbar = () => {
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                         <li><a>Home</a></li>
-                        {/* <li>
-                            <a>Fashion</a>
-                            <ul className="p-2">
-                                <li><a>Man</a></li>
-                                <li><a>Woman</a></li>
-                            </ul>
-                        </li> */}
+
 
                         {
                             data?.map(cat => <li key={cat._id}><a>{cat?.categoryName}</a></li>)
@@ -54,20 +53,28 @@ const Navbar = () => {
 
             </div>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal ">
+                <ul className="menu menu-horizontal capitalize">
                     <li><a>Home</a></li>
                     {
                         data?.map(cat => <li key={cat._id}>
                             {
                                 cat?.subCategory?.length > 0 ? <details>
-                                    <summary>{cat?.categoryName}</summary>
+                                    <summary className={category == cat?.categoryName ? "text-primary" : ""}>{cat?.categoryName}</summary>
                                     <ul className="p-2">
                                         {
-                                            cat?.subCategory?.map(sub => <li><a>{sub}</a></li>)
+                                            cat?.subCategory?.map(sub => <Link to='/listing' state={cat}>
+                                                <li onClick={() => {
+                                                    disPatch(setCategory(cat?.categoryName))
+                                                    disPatch(setSubCategory(sub))
+                                                }}><a>{sub}</a></li>
+                                            </Link>)
                                         }
 
                                     </ul>
-                                </details> : <a>{cat?.categoryName}</a>
+                                </details> : <Link to="/listing" state={cat} onClick={() => {
+                                    disPatch(setCategory(cat?.categoryName))
+                                    disPatch(setSubCategory(""))
+                                }}><li className={category == cat?.categoryName ? "text-primary" : ""}>{cat?.categoryName}</li></Link>
                             }
                         </li>)
                     }

@@ -8,21 +8,26 @@ import { useForm } from 'react-hook-form';
 import AdminButton from '../../../Components/Admin/AdminButton/AdminButton';
 import { toast } from 'react-toastify';
 import AdminBaredCrumb from '../../../Components/Admin/AdminBreadCrumb/AdminBaredCrumb';
-import { useGetCategoryImageMutation, useGetCategoryQuery, useGetCountriesApiQuery, useGetSubCategoryBycategoryQuery, useUploadProductMutation } from '../../../Redux/api/baseApi';
+import { useGetCategoryImageMutation, useGetCategoryQuery, useGetCountriesApiQuery, useGetProductsByIdQuery, useGetSubCategoryBycategoryQuery, useUploadProductMutation } from '../../../Redux/api/baseApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCountryFilter, setCurrentCategory, setRating, setSelectedCountry, setShowCountryBox, setShowSizebox, setSize } from '../../../Redux/Features/productUploadSlice';
+import { setCountryFilter, setCurrentCategory, setRating, setSelectedCountry, setShowCountryBox, setShowSizebox, setSize, setUpdatedUrlImg } from '../../../Redux/Features/productUploadSlice';
 import { fetchCountries } from '../../../Redux/Features/countrySlice';
+import { useLocation, useParams } from 'react-router-dom';
+import { use } from 'react';
 
 const ProductUpload = () => {
     const countryInputRef = useRef(null);
+    const { id } = useParams()
     const disPatch = useDispatch()
-    const { showSizeBox, showCountryBox, caurrentCategory, selectedCountry, countryFilter, size, rating } = useSelector((state) => state.productUploadSlice)
+    const location = useLocation()
+    const { showSizeBox, showCountryBox, caurrentCategory, selectedCountry, countryFilter, size, rating, updatedUrlImg } = useSelector((state) => state.productUploadSlice)
     const { data: categories, isLoading: categoryLoading } = useGetCategoryQuery()
-    const { data: subCategory, refetch } = useGetSubCategoryBycategoryQuery(caurrentCategory)
+    const { data: subCategory } = useGetSubCategoryBycategoryQuery(caurrentCategory)
     const { isLoading: countryLoading, countries } = useSelector((state) => state.countrySlice)
     // const { data: countries } = useGetCountriesApiQuery()
     const [setImages, { isLoading: imgLoader }] = useGetCategoryImageMutation()
     const [setNewProduct, { isLoading }] = useUploadProductMutation()
+    const { data: product, refetch } = useGetProductsByIdQuery(id)
     const [upLoadedImg, setUploadedImg] = useState([])
     const {
         register,
@@ -33,6 +38,7 @@ const ProductUpload = () => {
             locationCountry: []
         }
     })
+
 
 
     const handlImageUpload = async (e) => {
@@ -50,19 +56,74 @@ const ProductUpload = () => {
         setUploadedImg([...remainingImg])
         setValue('productImage', [...remainingImg])
     }
-
+    const handleUpdateImageUrl = (img) => {
+        const remainingImg = updatedUrlImg.filter(imgUp => imgUp != img)
+        disPatch(setUpdatedUrlImg(remainingImg))
+    }
     const handleCountry = (country, e) => {
         if (!selectedCountry.includes(country)) {
             const newSelectedCountry = [...selectedCountry, country];
             disPatch(setSelectedCountry(newSelectedCountry))
-            setValue('locationCountry', [...selectedCountry]);
             disPatch(setShowCountryBox(false))
 
         }
         // document.getElementById('countryInputBox').value = '';
         countryInputRef.current.value = ""
-
     }
+
+    const handliSize = (value) => {
+        if (size.includes(value)) {
+            const newSize = size.filter(v => v != value)
+            disPatch(setSize(newSize))
+        } else {
+            disPatch(setSize([...size, value]))
+        }
+    }
+
+    const handleDeleteSelectedCountry = (country) => {
+        const newSelectd = selectedCountry.filter(v => v != country)
+        disPatch(setSelectedCountry(newSelectd))
+    }
+
+
+
+    useEffect(() => {
+        if (product) {
+            const { productName, productCategory, isFeatured, isPopular, productImage, discount, productDescription, price, productStock, oldPrice, locationCountry, rams, weight, brand, rating, subCategory, _id, productSize } = product;
+            // setUploadedImg(productImage || []);
+            setValue('productName', productName);
+            setValue('productDescription', productDescription);
+            setValue('productCategory', productCategory);
+            setValue('price', price);
+            setValue('oldPrice', oldPrice);
+            setValue('isFeatured', isFeatured.toString());
+            setValue('isPopular', isPopular.toString());
+            setValue('productStock', productStock);
+            setValue('brand', brand);
+            setValue('discount', discount);
+            setValue('rams', rams);
+            setValue('weight', weight);
+            setValue('rating', rating);
+            setValue('productSize', productSize);
+            disPatch(setRating(rating))
+            disPatch(setSize([...productSize]))
+            disPatch(setSelectedCountry(locationCountry))
+            disPatch(setUpdatedUrlImg(productImage))
+
+        }
+
+    }, [product])
+
+    useEffect(() => {
+        if (location.pathname == "/dashboard/product/add") {
+            reset()
+            disPatch(setRating(1))
+            disPatch(setSize([]))
+            disPatch(setSelectedCountry([]))
+            disPatch(setUpdatedUrlImg([]))
+
+        }
+    }, [location.pathname])
     useEffect(() => {
         disPatch(fetchCountries())
     }, [])
@@ -92,20 +153,34 @@ const ProductUpload = () => {
         upLoadedImg.forEach((fileData) => {
             formData.append('galleryImage[]', fileData);
         });
+        if (upLoadedImg.length > 0) {
+            const imagesUrl = await setImages(formData).unwrap()
+            if (imagesUrl.success) {
+                productData.productImage = [...imagesUrl?.imageUrl, ...updatedUrlImg]
+            }
+        } else {
+            productData.productImage = [...updatedUrlImg]
 
-        const imagesUrl = await setImages(formData).unwrap()
+        }
 
-        if (imagesUrl?.name == 'galleryImage') {
-            productData.productImage = imagesUrl?.imageUrl
-            const data = await setNewProduct(productData).unwrap()
-            if (data?.insertedId) {
+        if (productData?.productImage.length > 0) {
+            const data = await setNewProduct({ newProduct: productData, id: product?._id }).unwrap()
+            console.log(data)
+            if (data?.modifiedCount == 1 || data?.insertedId) {
                 setUploadedImg([])
                 disPatch(setSize(null))
                 disPatch(setRating(1))
                 disPatch(setSelectedCountry([]))
                 disPatch(setCurrentCategory(null))
                 toast.success(`Successfully added!${productData?.productName}`)
-                reset()
+
+                if (location.pathname == "/dashboard/product/add") {
+                    reset()
+
+                } else {
+                    refetch()
+                }
+
 
 
             } else {
@@ -188,7 +263,7 @@ const ProductUpload = () => {
                             <span className="label-text">PRICE
                             </span>
                         </div>
-                        <input  {...register("price", { required: true })} aria-invalid={errors.price ? "true" : "false"} type="number" placeholder="" className="input input-bordered w-full " />
+                        <input  {...register("price", { required: true, })} aria-invalid={errors.price ? "true" : "false"} type="number" placeholder="" className="input input-bordered w-full " />
                         {errors.price && (
                             <p className='text-red-600 text-xs'>PRICE is required</p>
                         )}
@@ -251,7 +326,8 @@ const ProductUpload = () => {
                             <span className="label-text">PRODUCT RAMS
                             </span>
                         </div>
-                        <input  {...register("rams")} type="text" placeholder="" className="input input-bordered w-full " />
+                        <input  {...register("rams", { pattern: /^\d+gb$/i })} type="text" placeholder="" className="input input-bordered w-full " />
+                        {errors.rams && (<p className='text-red-600 text-xs'>Please enter an integer followed by "gb" (e.g., 2gb, 10GB)'</p>)}
                     </label>
 
                     <label className="form-control w-full max-w-xs`">
@@ -259,32 +335,24 @@ const ProductUpload = () => {
                             <span className="label-text">PRODUCT WEIGHT
                             </span>
                         </div>
-                        <input  {...register("weight")} type="text" placeholder="" className="input input-bordered w-full " />
+                        <input  {...register("weight", { pattern: /^\d+kg$/i })} type="text" placeholder="" className="input input-bordered w-full " />
+                        {errors.weight && (<p className='text-red-600 text-xs'>Please enter an integer followed by "kg" (e.g., 4kg, 5KG)'</p>)}
+
                     </label>
                     <label className="form-control w-full max-w-xs`">
                         <div className="label">
                             <span className="label-text">PRODUCT SIZE</span>
                         </div>
                         <div className='relative' {...register("productSize")}>
-                            <input onClick={() => disPatch(setShowSizebox(!showSizeBox))} type="text" readOnly value={size.join(", ")} placeholder="" className="input input-bordered w-full " />
+                            <input onClick={() => disPatch(setShowSizebox(!showSizeBox))} type="text" readOnly value={size?.join(", ")} placeholder="" className="input input-bordered w-full " />
 
                             <div className={`dark:bg-gray-900 absolute z-20 w-full ${showSizeBox ? '' : 'hidden'}`}>
-                                <label className="cursor-pointer label">
-                                    <span className="label-text">M</span>
-                                    <input name='sizeBox' value='M' onClick={(e) => disPatch(setSize(e))} type="checkbox" checked={size.includes('M')} className="checkbox checkbox-success" />
-                                </label>
-                                <label className="cursor-pointer label">
-                                    <span className="label-text">L</span>
-                                    <input name='sizeBox' value='L' onClick={(e) => disPatch(setSize(e))} type="checkbox" checked={size.includes('L')} className="checkbox checkbox-success" />
-                                </label>
-                                <label className="cursor-pointer label">
-                                    <span className="label-text">Xl</span>
-                                    <input name='sizeBox' value='Xl' onClick={(e) => disPatch(setSize(e))} type="checkbox" checked={size.includes('Xl')} className="checkbox checkbox-success" />
-                                </label>
-                                <label className="cursor-pointer label">
-                                    <span className="label-text">S</span>
-                                    <input name='sizeBox' value='S' onClick={(e) => disPatch(setSize(e))} type="checkbox" checked={size.includes('S')} className="checkbox checkbox-success" />
-                                </label>
+                                {
+                                    ['M', 'L', 'XL', 'S'].map(value => <label className="cursor-pointer label">
+                                        <span className="label-text">{value}</span>
+                                        <input name='sizeBox' value={value} onClick={() => handliSize(value)} type="checkbox" checked={size?.includes(value)} className="checkbox checkbox-success" />
+                                    </label>)
+                                }
                             </div>
                         </div>
                     </label>
@@ -308,17 +376,16 @@ const ProductUpload = () => {
                     </label>
 
                     <label htmlFor="" className='relative col-span-2'>
-                        <label className="w-full  input input-bordered relative flex items-center gap-2" {...register("locationCountry", { required: selectedCountry.length == 0 })} aria-invalid={errors.locationCountry ? "true" : "false"}>
+                        <label className="w-full  input input-bordered relative flex items-center gap-2">
                             <div className='flex gap-2'>
                                 {
-                                    selectedCountry.length > 0 && selectedCountry?.map(country => <button className='btn btn-sm cursor-auto hover:bg-white text-gray-500 flex dark:bg-white' type="">{country} <span onClick={() => {
-                                        const newSelectedCountry = selectedCountry.filter(v => v !== country);
-                                        disPatch(setSelectedCountry(newSelectedCountry))
-
-                                    }} className='cursor-pointer'>x</span></button>)
+                                    selectedCountry.length > 0 && selectedCountry?.map(country => <div className='btn btn-sm cursor-auto hover:bg-white text-gray-500 flex dark:bg-white' readOnly>{country} <span onClick={() => handleDeleteSelectedCountry(country)} className='cursor-pointer'>x</span></div>)
                                 }
                             </div>
-                            <input type="text" ref={countryInputRef} onChange={(e) => disPatch(setCountryFilter({ countries, searchText: e.target.value }))} onClick={() => { disPatch(setShowCountryBox(!showCountryBox)), setCountryFilter([...countries]) }} placeholder="" className="grow" />
+                            <input
+                                {...register("locationCountry", {
+                                    validate: () => selectedCountry.length > 0 || "Please select at least one country."
+                                })} type="text" ref={countryInputRef} onChange={(e) => disPatch(setCountryFilter({ countries, searchText: e.target.value }))} onClick={() => { disPatch(setShowCountryBox(!showCountryBox)), setCountryFilter([...countries]) }} placeholder="" className="grow" />
 
                             {errors.locationCountry && (
                                 <p className='text-red-600 text-xs'>Location is required</p>
@@ -344,13 +411,20 @@ const ProductUpload = () => {
                                     <img className="w-full h-full rounded-xl" src={URL.createObjectURL(img)} alt="" />
                                     <TiDelete onClick={() => handleDeleteUploadImg(img)} className="absolute cursor-pointer -top-2 -right-2 text-2xl text-white bg-red-600 rounded-full" />
                                 </div>)
+
+                            }
+                            {
+                                updatedUrlImg.length > 0 && updatedUrlImg?.map(img => <div className="lg:w-40 w-28 lg:h-40 h-28 relative p-5  border-dashed border-2 border-gray-300 rounded-xl">
+                                    <img className="w-full h-full rounded-xl" src={img} alt="" />
+                                    <TiDelete onClick={() => handleUpdateImageUrl(img)} className="absolute cursor-pointer -top-2 -right-2 text-2xl text-white bg-red-600 rounded-full" />
+                                </div>)
                             }
                         </div>
                         <div type='file' className={`file-input relative bg-gray-100 dark:bg-gray-900 lg:w-40 w-28 lg:h-40 h-28 dark:border-gray-600 text-gray-400 border-dashed  border-2 border-gray-300 rounded-xl flex flex-col justify-center  items-center`}>
                             <IoImagesOutline className="lg:text-5xl text-2xl" />
                             <p className='lg:text-lg text-sm'>image upload</p>
                             <input
-                                {...register("productImage", { required: upLoadedImg.length == 0 })} aria-invalid={errors.productImage ? "true" : "false"}
+                                {...register("productImage", { required: upLoadedImg.length == 0 && updatedUrlImg.length == 0 })} aria-invalid={errors.productImage ? "true" : "false"}
                                 type="file"
                                 id="fileInput"
                                 className="absolute inset-0 opacity-0 cursor-pointer"

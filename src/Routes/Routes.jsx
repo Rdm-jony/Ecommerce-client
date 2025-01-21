@@ -12,9 +12,11 @@ import Cart from "../Pages/Cart/Cart";
 import EditCategory from "../Pages/Admin/Category/EditCategory";
 import AddSubCategory from "../Pages/Admin/Category/AddSubCategory";
 import SubCategoryList from "../Pages/Admin/Category/SubCategoryList";
-import Drawer from "../Pages/Drawer";
 import ProductUpload from "../Pages/Admin/Products/ProductUpload";
 import ProductList from "../Pages/Admin/Products/ProductList";
+import SignUp from "../Pages/SignUp/SignUp";
+import SignIn from "../Pages/SignIn/SignIn";
+import Checkout from "../Pages/Checkout/Checkout";
 
 export const router = createBrowserRouter([
     {
@@ -29,22 +31,27 @@ export const router = createBrowserRouter([
             {
                 path: '/listing',
                 element: <Listing></Listing>,
-                children: [{
-                    path: '/listing',
-                    element: <AllProducts></AllProducts>
-                }]
+
             },
             {
-                path: "/details",
+                path: "/details/:id",
                 element: <Details></Details>
             },
             {
                 path: "carts",
                 element: <Cart></Cart>
             },
+
             {
-                path: '/drawer',
-                element: <Drawer></Drawer>
+                path: 'signUp',
+                element: <SignUp></SignUp>
+            }, {
+                path: 'signIn',
+                element: <SignIn></SignIn>
+            },
+            {
+                path:"/checkout",
+                element:<Checkout></Checkout>
             }
         ]
     }, {
@@ -84,6 +91,10 @@ export const router = createBrowserRouter([
             {
                 path: "products/:id",
                 element: <Details></Details>
+            },
+            {
+                path: 'product/update/:id',
+                element: <ProductUpload></ProductUpload>
             },
         ]
     },

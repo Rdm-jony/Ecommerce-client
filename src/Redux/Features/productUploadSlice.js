@@ -7,6 +7,7 @@ const initialState = {
     showSizeBox: false,
     showCountryBox: false,
     caurrentCategory: null,
+    updatedUrlImg: [],
     selectedCountry: [],
     countryFilter: [],
     size: [],
@@ -42,27 +43,20 @@ export const productUploadSlice = createSlice({
             }
         },
         setSize: (state, { payload }) => {
-            if (payload) {
-                if (payload?.target.checked) {
-                    const newSize = [...state.size, payload.target.value]
-                    state.size = newSize
-
-                } else {
-                    const newSize = state.size.filter(s => s !== payload.target.value);
-                    state.size = newSize
-                }
-            } else {
-                state.size = []
-            }
+            state.size = payload
 
         },
         setRating: (state, { payload }) => {
             state.rating = payload
+        },
+        setUpdatedUrlImg: (state, { payload }) => {
+            state.updatedUrlImg = payload
         }
     },
 
+
 })
 
-export const { setShowSizebox, setShowCountryBox, setCurrentCategory, selectedCountry, setSelectedCountry, setCountryFilter, setSize, setRating } = productUploadSlice.actions
+export const { setShowSizebox, setShowCountryBox, setCurrentCategory, selectedCountry, setSelectedCountry, setCountryFilter, setSize, setRating, setUpdatedUrlImg } = productUploadSlice.actions
 
 export default productUploadSlice.reducer

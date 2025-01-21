@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CountingCard from '../../../Components/Admin/CountingCard/CountingCard';
 import useGetDataPublic from '../../../Hooks/useGetDataPublic';
 import BtnLoader from '../../../Components/BtnLoader/BtnLoader';
@@ -11,11 +11,16 @@ import ProductTableRow from '../../../Components/Admin/ProductTableRow/ProductTa
 const ProductList = () => {
     const { data: total, isLoading: totalProductsLoading } = useGetTotalProductsQuery()
     const [categories, ,] = useGetDataPublic('category', '/category', [])
-    const { data: products, isLoading } = useGetProductsQuery()
+    const [currentCategory, setCurrentCategory] = useState('All')
+    const { data: products, isLoading, refetch } = useGetProductsQuery(currentCategory)
 
+    // useEffect(() => {
+    //     refetch()
+    // }, [currentCategory])
     if (isLoading) {
         return <BtnLoader></BtnLoader>
     }
+    console.log(currentCategory)
     return (
         <div className='w-full'>
             <div className='flex gap-8'>
@@ -31,10 +36,10 @@ const ProductList = () => {
                         <div className="label">
                             <span className="label-text">CATEGORY BY</span>
                         </div>
-                        <select className="select select-bordered">
-                            <option disabled selected>All</option>
+                        <select onChange={(e) => setCurrentCategory(e.target.value)} className="select select-bordered">
+                            <option   value='All' selected>All</option>
                             {
-                                categories?.map(cat => <option key={cat._id} value={cat?.categoryName}>{cat?.categoryName}</option>)
+                                categories?.map(cat => <option value={cat?.categoryName}>{cat?.categoryName}</option>)
                             }
                         </select>
 

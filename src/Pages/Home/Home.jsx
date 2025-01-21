@@ -14,7 +14,7 @@ const Home = () => {
             <Category></Category>
             <PopularProducts></PopularProducts>
             <AdsCards></AdsCards>
-            <FeaturedProducts ></FeaturedProducts>
+            {/* <FeaturedProducts ></FeaturedProducts> */}
             <Subscribe></Subscribe>
             <Facilities></Facilities>
         </div>

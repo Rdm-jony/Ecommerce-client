@@ -5,7 +5,15 @@ import { FaRegHeart, FaShoppingCart } from 'react-icons/fa';
 import { IoCartOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import Theme from '../../Components/Theme/Theme';
+import { auth } from '../../Firebase/firebase.config';
+import { signOut } from 'firebase/auth';
+import { useGetAllCartsQuery } from '../../Redux/api/baseApi';
 const Header = () => {
+    const { data: carts } = useGetAllCartsQuery()
+
+    const handleLogout = () => {
+        signOut(auth)
+    }
     return (
         <div className='flex items-center gap-10 mb-5 dark:bg-dark py-5 px-2'>
             <div className='w-5/12'>
@@ -43,16 +51,21 @@ const Header = () => {
                 <p>Wishlist</p>
             </div>
             <div className='flex gap-2'>
-                <Link to='/cart'>
+                <Link to='/carts'>
                     <div className="indicator" >
                         <IoCartOutline className='text-2xl' />
-                        <span className="badge bg-primary text-white badge-sm indicator-item">8</span>
+                        <span className="badge bg-primary text-white badge-sm indicator-item">{carts?.result.length}</span>
                     </div></Link>
                 <p>Cart</p>
             </div>
 
-            <button className='btn bg-primary text-white btn-sm'>Sign In</button>
-
+            <div className="dropdown  dropdown-end">
+                <div tabIndex={0} role="button" className="btn m-1 bg-primary">Click</div>
+                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow">
+                    <li onClick={handleLogout}><a>LogOut</a></li>
+                    <li><a>Item 2</a></li>
+                </ul>
+            </div>
             <Theme></Theme>
         </div>
 

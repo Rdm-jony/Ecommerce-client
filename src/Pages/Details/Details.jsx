@@ -11,12 +11,16 @@ import Description from '../../Components/Description/Description';
 import AdditionalInfo from '../../Components/AdditionalInfo/AdditionalInfo';
 import Reviews from '../../Components/Reviews/Reviews';
 import RelatedProducts from '../../Components/RelatedProducts/RelatedProducts';
-import { useGetProductsByIdQuery } from '../../Redux/api/baseApi';
+import { useAddToCartMutation, useGetProductsByIdQuery } from '../../Redux/api/baseApi';
 import BtnLoader from '../../Components/BtnLoader/BtnLoader';
 import { useLocation, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 let index = 0;
 const Details = () => {
+    const { email } = useSelector((state) => state.authenticationSlice)
+    const [setCartInfo] = useAddToCartMutation()
     const { id } = useParams()
     const location = useLocation()
     const { data: product, isLoading } = useGetProductsByIdQuery(id)
@@ -44,8 +48,22 @@ const Details = () => {
     if (isLoading) {
         return <BtnLoader></BtnLoader>
     }
-    const { productName, productCategory, productImage, discount, productDescription, price, productStock, oldPrice, locationCountry, rams, weight, brand, rating, subCategory, _id, productSize } = product;
+    const { productName, productCategory, productImage, discount, productDescription, price, productStock, oldPrice, locationCountry, rams, weight, brand, rating, subCategory, _id, productSize, productReviews, avgRating } = product;
     const additionInfo = { Category: productCategory, Brand: brand, Subcategory: subCategory, Rams: rams, Weight: weight, "Product Stock": productStock, "Available country": locationCountry.join(" , ") }
+    const handleAddToCart = async () => {
+        if (!size) {
+            return toast.error('please select product size!')
+        }
+        const cartInfo = { productImage: productImage[0], productName, price: parseFloat(price), avgRating: avgRating ? avgRating : rating, count, totalReview: productReviews.length, size, email, productId: _id }
+        const result = await setCartInfo(cartInfo).unwrap()
+        if (result.message) {
+            return toast.error(result.message)
+        }
+        if (result.insertedId) {
+            toast.success('success')
+            setSize(null)
+        }
+    }
     return (
         <div>
             <div className='lg:flex dark:bg-dark'>
@@ -79,13 +97,13 @@ const Details = () => {
                     <h2 className='text-3xl font-semibold capitalize'>{productName}</h2>
                     <div className='flex gap-5 items-center'>
                         <Rating
-                            placeholderRating={rating}
+                            placeholderRating={avgRating ? avgRating : rating}
                             emptySymbol={<FaRegStar className="text-gray-400" />
                             }
                             placeholderSymbol={<FaStar className="text-[#FAAF00]" />}
                             fullSymbol={<FaStar className="text-[#FAAF00]" />}
                         />
-                        <p className='text-light text-2xl mb-2'>(1 reviews)</p>
+                        <p className='text-light text-2xl mb-2'>({productReviews.length > 0 ? productReviews.length : 1})</p>
                     </div>
                     <div className='flex gap-5 items-center'>
                         <p className='text-3xl font-semibold text-primary'>Rs {price}</p>
@@ -95,12 +113,14 @@ const Details = () => {
                         </div>
                     </div>
                     <p className='text-light'>{productDescription}</p>
-                    <div className='flex gap-3 items-center'>
-                        <p>Size :</p>
-                        {
-                            productSize?.map(sizeProd => <button onClick={() => setSize(sizeProd)} className={`btn  btn-sm btn-outline ${size == sizeProd ? 'bg-primary text-white' : ''} hover:bg-primary`}>{sizeProd}</button>)
-                        }
-                    </div>
+                    {
+                        productSize && <div className='flex gap-3 items-center'>
+                            <p>Size :</p>
+                            {
+                                productSize?.map(sizeProd => <button onClick={() => setSize(sizeProd)} className={`btn  btn-sm btn-outline ${size == sizeProd ? 'bg-primary text-white' : ''} hover:bg-primary`}>{sizeProd}</button>)
+                            }
+                        </div>
+                    }
                     <div className='flex gap-8'>
                         <div className='flex gap-5 items-center'>
                             <div onClick={handleDecrement} className='cursor-pointer bg-gray-200 w-12 h-12 flex justify-center items-center rounded-full'>
@@ -111,7 +131,7 @@ const Details = () => {
                                 <FaPlus className='text-lg' />
                             </div>
                         </div>
-                        <button className='btn bg-primary text-white'><IoCartOutline className='text-lg' /> Add To Cart</button>
+                        <button className='btn bg-primary text-white' onClick={handleAddToCart}><IoCartOutline className='text-lg' /> Add To Cart</button>
                         <button className='btn btn-outline'><FaRegHeart className='text-xl' /></button>
                     </div>
                 </div>
@@ -130,7 +150,7 @@ const Details = () => {
                         isActiveInfo == 1 && <AdditionalInfo additionInfo={additionInfo}></AdditionalInfo>
                     }
                     {
-                        isActiveInfo == 2 && <Reviews></Reviews>
+                        isActiveInfo == 2 && <Reviews productReviews={productReviews}></Reviews>
                     }
                 </div>
             </div>
