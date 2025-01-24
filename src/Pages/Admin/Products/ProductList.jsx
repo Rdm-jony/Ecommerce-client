@@ -14,9 +14,7 @@ const ProductList = () => {
     const [currentCategory, setCurrentCategory] = useState('All')
     const { data: products, isLoading, refetch } = useGetProductsQuery(currentCategory)
 
-    // useEffect(() => {
-    //     refetch()
-    // }, [currentCategory])
+    
     if (isLoading) {
         return <BtnLoader></BtnLoader>
     }
@@ -62,7 +60,7 @@ const ProductList = () => {
             </div>
             <table class="border-collapse border border-slate-400 w-full">
                 <thead className='sticky top-0'>
-                    <tr className='h-10 dark:bg-primary text-white'>
+                    <tr className='h-10 bg-primary text-white'>
                         <th class="border border-slate-300 ..." >PRODUCT</th>
                         <th class="border border-slate-300 ..." ></th>
                         <th class="border border-slate-300 ...">CATEGORY</th>

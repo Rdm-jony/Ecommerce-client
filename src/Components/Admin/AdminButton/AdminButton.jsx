@@ -3,8 +3,8 @@ import BtnLoader from "../../BtnLoader/BtnLoader";
 
 const AdminButton = ({ loading }) => {
     return (
-        <button type="submit" disabled={loading ? true : false} className="w-full uppercase bg-primary btn text-lg text-white">{
-            loading ? <BtnLoader></BtnLoader> : <><FaCloudUploadAlt /> <span>Publish and view</span></>
+        <button type="submit" className={`w-full uppercase bg-primary btn text-lg text-white ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>{
+            loading ? <span><BtnLoader> Loading...</BtnLoader></span> : <><FaCloudUploadAlt /> <span>Publish and view</span></>
         } </button>
     );
 };

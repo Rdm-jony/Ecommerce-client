@@ -1,14 +1,31 @@
 import React from 'react';
-import { useGetAllCartsQuery } from '../../Redux/api/baseApi';
+import { useCreateBkashPaymentMutation, useGetAllCartsQuery } from '../../Redux/api/baseApi';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import BtnLoader from '../../Components/BtnLoader/BtnLoader';
+import { toast } from 'react-toastify';
 
 const Checkout = () => {
     const { email } = useSelector((state) => state.authenticationSlice)
-    const { data: carts, isLoading } = useGetAllCartsQuery()
+    const [setPaymentInfo] = useCreateBkashPaymentMutation()
+    const { data: carts, isLoading } = useGetAllCartsQuery(email)
     const { register, handleSubmit, formState: { errors } } = useForm()
-    const onSubmit = (data) => console.log(data)
+    const onSubmit = async (data) => {
+        const userInfo = data
+        const productInfo = carts
+        const paymentInfo = { userInfo, productInfo }
+        try {
+            const result = await setPaymentInfo(paymentInfo).unwrap()
+            console.log(result)
+            if (result?.bkashURL) {
+                window.location.href = result?.bkashURL
+
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     if (!email) {
         return <BtnLoader></BtnLoader>
     }
@@ -81,7 +98,7 @@ const Checkout = () => {
                     <div className='space-y-4 pt-5'>
                         {
                             carts?.result?.map(cart => <div key={cart._id} className='flex justify-between'>
-                                <p><span className=''>{cart.productName.length > 50 ? `${cart.productName.substring(0, 50)}...` : cart.productName}</span> x {cart.count}</p>
+                                <p><span className=''>{cart.productName.length > 50 ? `${cart.productName.substring(0, 30)}...` : cart.productName}</span> x {cart.count}</p>
                                 <p>{cart?.count * cart.price}</p>
                             </div>)
                         }

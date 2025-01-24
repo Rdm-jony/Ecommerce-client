@@ -4,9 +4,11 @@ import { useGetAllCartsQuery } from "../../Redux/api/baseApi";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BtnLoader from "../../Components/BtnLoader/BtnLoader";
+import { useSelector } from "react-redux";
 
 const Cart = () => {
-    const { data: carts, refetch, isLoading } = useGetAllCartsQuery()
+    const { email } = useSelector((state) => state.authenticationSlice)
+    const { data: carts, refetch, isLoading } = useGetAllCartsQuery(email)
     if (isLoading) {
         return <BtnLoader></BtnLoader>
     }

@@ -6,16 +6,19 @@ import RelatedProducts from "../RelatedProducts/RelatedProducts";
 import { Link, useLocation, useParams } from "react-router-dom";
 import PrivateRoute from "../../Routes/PrivateRoute";
 import { useSelector } from "react-redux";
+import { useGetProductReviewsQuery } from "../../Redux/api/baseApi";
 
 const Reviews = ({ productReviews }) => {
     const { id } = useParams()
     const { email } = useSelector((state) => state.authenticationSlice)
+    const {data:productReview}=useGetProductReviewsQuery(id)
+    console.log(productReview)
     return (
         <div className="w-3/5">
             <h2 className="font-semibold my-5">Customer questions & answers</h2>
             <div className="h-60 overflow-auto space-y-3">
                 {
-                    productReviews.map(review => <ReviewCard key={review._id} review={review}></ReviewCard>)
+                    productReview?.map(review => <ReviewCard key={review._id} review={review}></ReviewCard>)
                 }
 
             </div>

@@ -2,10 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
 import Home from "../Pages/Home/Home";
 import Listing from "../Pages/Listing/Listing";
-import AllProducts from "../Pages/Listing/AllProducts/AllProducts";
 import Details from "../Pages/Details/Details";
 import AdminDashboardLayout from "../Pages/Admin/AdminDashboardLayout/AdminDashboardLayout";
-import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
 import CategoryList from "../Pages/Admin/Category/CategoryList";
 import AddCategory from "../Pages/Admin/Category/AddCategory";
 import Cart from "../Pages/Cart/Cart";
@@ -17,6 +15,14 @@ import ProductList from "../Pages/Admin/Products/ProductList";
 import SignUp from "../Pages/SignUp/SignUp";
 import SignIn from "../Pages/SignIn/SignIn";
 import Checkout from "../Pages/Checkout/Checkout";
+import BKashErrorPage from "../Pages/Error/PaymentErrorPage";
+import BKashPaymentSuccessPage from "../Pages/Success/BkashSuccessPage";
+import ProductOrder from "../Pages/Orders/ProductOrder";
+import BannerList from "../Pages/Admin/HomeBanner/BannerList";
+import AddBanner from "../Pages/Admin/HomeBanner/AddBanner";
+import ProductDashboard from "../Pages/Admin/ProductDashboard/ProductDashboard";
+import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
     {
@@ -50,17 +56,29 @@ export const router = createBrowserRouter([
                 element: <SignIn></SignIn>
             },
             {
-                path:"/checkout",
-                element:<Checkout></Checkout>
+                path: "/checkout",
+                element: <Checkout></Checkout>
+            },
+            {
+                path: "/payment/error/:status",
+                element: <BKashErrorPage></BKashErrorPage>
+            },
+            {
+                path: '/payment/success',
+                element: <BKashPaymentSuccessPage></BKashPaymentSuccessPage>
+            },
+            {
+                path: '/product/order',
+                element: <ProductOrder></ProductOrder>
             }
         ]
     }, {
         path: '/dashboard',
-        element: <AdminDashboardLayout></AdminDashboardLayout>,
+        element: <AdminRoute><AdminDashboardLayout></AdminDashboardLayout></AdminRoute>,
         children: [
             {
                 path: "",
-                element: <Dashboard></Dashboard>
+                element: <ProductDashboard></ProductDashboard>
             },
             {
                 path: 'category',
@@ -96,6 +114,23 @@ export const router = createBrowserRouter([
                 path: 'product/update/:id',
                 element: <ProductUpload></ProductUpload>
             },
+            {
+                path: 'product/orders',
+                element: <ProductOrder></ProductOrder>
+            },
+            {
+                path: 'bannerList',
+                element: <BannerList></BannerList>
+            },
+            {
+                path: 'banner/add/:id',
+                element: <AddBanner></AddBanner>
+            },
+            {
+                path: 'banner/add',
+                element: <AddBanner></AddBanner>
+            },
+
         ]
     },
 

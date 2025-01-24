@@ -8,8 +8,10 @@ import Theme from '../../Components/Theme/Theme';
 import { auth } from '../../Firebase/firebase.config';
 import { signOut } from 'firebase/auth';
 import { useGetAllCartsQuery } from '../../Redux/api/baseApi';
+import { useSelector } from 'react-redux';
 const Header = () => {
-    const { data: carts } = useGetAllCartsQuery()
+    const {email}=useSelector((state)=>state.authenticationSlice)
+    const { data: carts } = useGetAllCartsQuery(email)
 
     const handleLogout = () => {
         signOut(auth)

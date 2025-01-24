@@ -7,8 +7,10 @@ import { FaAngleRight, FaArrowRight } from 'react-icons/fa';
 import Dropdown from '../Component/Dropdown';
 import { BiSolidCategory } from 'react-icons/bi';
 import Theme from '../../../Components/Theme/Theme';
+import { useSelector } from 'react-redux';
 const AdminDashboardLayout = () => {
     const [openSidebar, setOpenSidebar] = useState(true)
+    const { email, name } = useSelector((state) => state.authenticationSlice)
 
     return (
         <div className='mx-auto max-w-7xl'>
@@ -33,11 +35,11 @@ const AdminDashboardLayout = () => {
                     </div>
                     <div className='flex gap-5 items-center'>
                         <div className='bg-primary text-white p-2 w-12 h-12 flex justify-center items-center rounded-full'>
-
+                            <span className='uppercase font-semibold text-xl'>{name[0]}</span>
                         </div>
                         <div>
-                            <p className='font-semibold'>Jony Das</p>
-                            <p>jonydascse@gmail.com</p>
+                            <p className='font-semibold capitalize'>{name}</p>
+                            <p>{email}</p>
                         </div>
                     </div>
                 </div>
@@ -56,6 +58,7 @@ const AdminDashboardLayout = () => {
                     <ul className="menu bg-base-200 text-base-content min-h-full w-52 p-4">
                         {/* Sidebar content here */}
                         <Link to='/dashboard'> <li><a><MdDashboard /> Dashboard</a></li></Link>
+                        <Link to='/dashboard/product/orders'> <li><a><MdDashboard /> Orders</a></li></Link>
                         <li>
                             <details>
                                 <summary><BiSolidCategory /> Products</summary>
@@ -74,6 +77,15 @@ const AdminDashboardLayout = () => {
                                     <Link to='category/add'><li><a>Add Cetegory</a></li></Link>
                                     <Link to='subCategory'><li><a>Sub Cetegory List</a></li></Link>
                                     <Link to='subCategory/add'><li><a>Add a Sub Cetegory</a></li></Link>
+                                </ul>
+                            </details>
+                        </li>
+                        <li>
+                            <details>
+                                <summary><BiSolidCategory /> Home Banner</summary>
+                                <ul className="p-2">
+                                    <Link to='bannerList'><li><a>Banner List</a></li></Link>
+                                    <Link to='banner/add'><li><a>Banner List</a></li></Link>
                                 </ul>
                             </details>
                         </li>
