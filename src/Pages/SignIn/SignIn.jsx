@@ -1,12 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import google from '../../assets/Icon/google.png'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInGoogle, signInUser } from '../../Redux/Features/authenticationSlice';
 import { toast } from 'react-toastify';
 
 const SignIn = () => {
+    const location=useLocation()
+    const navigate=useNavigate()
     const disPatch = useDispatch()
     const { register, handleSubmit, formState: { errors } } = useForm()
     const onSubmit = (data) => {
@@ -14,6 +16,7 @@ const SignIn = () => {
         console.log(data)
         disPatch(signInUser({ email, password })).then(value => {
             if (value.meta.requestStatus == "fulfilled") {
+                navigate(location?.state?.pathname?location?.state?.pathname:"/")
                 return toast.success("successfully Logged in!")
             }
             if (value.error) {
@@ -28,6 +31,7 @@ const SignIn = () => {
     const handleGoogleSignIn = async () => {
         disPatch(signInGoogle()).then(value => {
             if (value.meta.requestStatus == "fulfilled") {
+                navigate(location?.state?.pathname?location?.state?.pathname:"/")
                 return toast.success("successfully Logged in!")
             }
             if (value.error) {
@@ -41,8 +45,8 @@ const SignIn = () => {
     }
     return (
         <div>
-            <div className='w-1/3 mx-auto'>
-                <p className='text-3xl my-5'>SignIn</p>
+            <div className='lg:w-1/3 mx-auto'>
+                <p className='text-3xl my-5 text-center'>SignIn</p>
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
 
                     <label className="input input-bordered flex items-center gap-2">
@@ -62,7 +66,7 @@ const SignIn = () => {
 
                     }
 
-                    <button className='btn bg-primary text-white w-full'>Sign Up</button>
+                    <button className='btn bg-primary text-white w-full'>Sign In</button>
                 </form>
                 <div className="divider">OR</div>
                 <div onClick={handleGoogleSignIn} className='border-[1px] border-primary rounded-md cursor-pointer flex justify-center'>

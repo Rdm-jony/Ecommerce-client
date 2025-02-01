@@ -16,7 +16,7 @@ const Category = () => {
         <div>
             <h2 className="text-3xl font-semibold">Featured Categories
             </h2>
-            <div className='flex justify-between mt-5'>
+            <div className='flex justify-between mt-5 flex-wrap'>
                 {
                     data?.map((cat, idx) => <div key={idx}>
 

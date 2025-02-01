@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const Cart = () => {
     const { email } = useSelector((state) => state.authenticationSlice)
+    console.log(email)
     const { data: carts, refetch, isLoading } = useGetAllCartsQuery(email)
     if (isLoading) {
         return <BtnLoader></BtnLoader>
@@ -22,8 +23,8 @@ const Cart = () => {
                 </ul>
             </div>
             <hr />
-            <div className="flex">
-                <div className="w-2/3">
+            <div className="lg:flex">
+                <div className="lg:w-2/3">
                     <div className="my-10">
                         <h2 className="font-semibold text-xl">Your Cart</h2>
                         <p>There are <span className="text-primary font-semibold">{carts?.length}</span> products in your cart
@@ -54,7 +55,7 @@ const Cart = () => {
                     </div>
                     <button className="btn bg-primary text-white mt-10"><FaArrowLeft></FaArrowLeft> Continue Shooping</button>
                 </div>
-                <div className="w-1/3 p-10">
+                <div className="lg:w-1/3 p-10">
                     <div className="p-5 border-2 dark:border-gray-400 bg-gray-100 dark:bg-dark rounded-xl space-y-4 sticky top-24">
                         <div className="flex justify-between">
                             <p className="font-semibold text-light">Subtotal</p>

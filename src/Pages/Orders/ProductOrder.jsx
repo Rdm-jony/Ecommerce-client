@@ -11,8 +11,8 @@ const ProductOrder = () => {
     const location = useLocation()
     const [setUpdateStatus] = useUpdateProductPayStatusMutation()
     const { email } = useSelector((state) => state.authenticationSlice)
-    const { data: orders, isLoading, refetch } = useGetProductOrdersQuery(location?.pathname == '/dashboard/product/orders' ? 'null' : email)
-    // console.log(data)
+    console.log(email)
+    const { data: orders, isLoading, refetch ,error} = useGetProductOrdersQuery( email,{skip:!email})
     const [selectdedProducts, setSelectedProducts] = useState([])
     const handleModal = async (products) => {
         setSelectedProducts(products?.result)

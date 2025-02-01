@@ -1,16 +1,14 @@
 import AdsCard from "../../../Components/AdsCard/AdsCard";
-import cardImg1 from '../../../assets/ads/card1.webp'
-import cardImg2 from '../../../assets/ads/card2.webp'
-import cardImg3 from '../../../assets/ads/card3.webp'
-import cardImg4 from '../../../assets/ads/card4.webp'
+import { useGetHomeBannerQuery } from "../../../Redux/api/baseApi";
 
 const AdsCards = () => {
-    const cards = [cardImg1, cardImg2, cardImg3, cardImg4]
+    const { data: homeBanner } = useGetHomeBannerQuery()
+    console.log(homeBanner)
     return (
-        <div className="flex gap-5">
+        <div className="flex justify-center gap-5">
             {
 
-                cards.map((card, idx) => <AdsCard key={idx} image={card}></AdsCard>)
+                homeBanner?.map((card, idx) => <AdsCard key={idx} card={card}></AdsCard>)
             }
 
         </div>

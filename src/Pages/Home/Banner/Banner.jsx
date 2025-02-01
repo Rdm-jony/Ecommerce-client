@@ -29,7 +29,7 @@ const Banner = () => {
 
                 {
                     images.map(image => <SwiperSlide >
-                        <img src={image} alt="" />
+                        <img className='h-auto' src={image} alt="" />
                     </SwiperSlide>)
                 }
 

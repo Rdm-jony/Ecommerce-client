@@ -16,8 +16,10 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <AuthListener></AuthListener>
-        <RouterProvider router={router}></RouterProvider>
+      <AuthListener></AuthListener>
+
+        <RouterProvider router={router}>
+        </RouterProvider>
       </Provider>
     </QueryClientProvider>
     <ToastContainer />

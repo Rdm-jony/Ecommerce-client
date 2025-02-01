@@ -1,4 +1,4 @@
-import { MdDarkMode, MdDashboard, MdOutlineLegendToggle } from 'react-icons/md';
+import { MdDarkMode, MdDashboard, MdHome, MdOutlineLegendToggle } from 'react-icons/md';
 import adminLogo from '../../../assets/admin/adminLogo.png'
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useEffect, useState } from 'react';
@@ -57,6 +57,8 @@ const AdminDashboardLayout = () => {
                     <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
                     <ul className="menu bg-base-200 text-base-content min-h-full w-52 p-4">
                         {/* Sidebar content here */}
+                        <Link to='/'> <li><a><MdHome /> Home</a></li></Link>
+
                         <Link to='/dashboard'> <li><a><MdDashboard /> Dashboard</a></li></Link>
                         <Link to='/dashboard/product/orders'> <li><a><MdDashboard /> Orders</a></li></Link>
                         <li>
@@ -85,7 +87,7 @@ const AdminDashboardLayout = () => {
                                 <summary><BiSolidCategory /> Home Banner</summary>
                                 <ul className="p-2">
                                     <Link to='bannerList'><li><a>Banner List</a></li></Link>
-                                    <Link to='banner/add'><li><a>Banner List</a></li></Link>
+                                    <Link to='banner/add'><li><a>add Banner</a></li></Link>
                                 </ul>
                             </details>
                         </li>

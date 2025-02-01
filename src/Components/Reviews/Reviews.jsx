@@ -14,7 +14,7 @@ const Reviews = ({ productReviews }) => {
     const {data:productReview}=useGetProductReviewsQuery(id)
     console.log(productReview)
     return (
-        <div className="w-3/5">
+        <div className="lg:w-3/5 w-full">
             <h2 className="font-semibold my-5">Customer questions & answers</h2>
             <div className="h-60 overflow-auto space-y-3">
                 {

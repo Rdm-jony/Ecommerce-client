@@ -23,6 +23,7 @@ import AddBanner from "../Pages/Admin/HomeBanner/AddBanner";
 import ProductDashboard from "../Pages/Admin/ProductDashboard/ProductDashboard";
 import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
+import MyAccount from "../Pages/Account/MyAccount";
 
 export const router = createBrowserRouter([
     {
@@ -70,11 +71,15 @@ export const router = createBrowserRouter([
             {
                 path: '/product/order',
                 element: <ProductOrder></ProductOrder>
+            },
+            {
+                path: '/account',
+                element: <MyAccount></MyAccount>
             }
         ]
     }, {
         path: '/dashboard',
-        element: <AdminRoute><AdminDashboardLayout></AdminDashboardLayout></AdminRoute>,
+        element: <PrivateRoute><AdminRoute><AdminDashboardLayout></AdminDashboardLayout></AdminRoute></PrivateRoute>,
         children: [
             {
                 path: "",
@@ -130,6 +135,7 @@ export const router = createBrowserRouter([
                 path: 'banner/add',
                 element: <AddBanner></AddBanner>
             },
+
 
         ]
     },

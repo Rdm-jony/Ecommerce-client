@@ -6,12 +6,11 @@ import useUserRole from '../Hooks/useUserRole';
 
 const AdminRoute = ({ children }) => {
     const location = useLocation()
-    const { isLoading, email } = useSelector((state) => state.authenticationSlice)
-    const [isAdmin,isAdminLoading]=useUserRole()
-    if (isLoading || isAdminLoading) {
+    const [isAdmin, isAdminLoading] = useUserRole()
+    if (isAdminLoading) {
         return <p>Loadind..................</p>
     }
-    if (email && isAdmin) {
+    if (isAdmin) {
         return children;
     }
     return <Navigate to='/signIn' state={location.pathname}></Navigate>

@@ -21,11 +21,11 @@ const Listing = () => {
 
             <ListingTitle></ListingTitle>
             <div className='flex mt-10'>
-                <Sidebar></Sidebar>
-                <div className='w-9/12 overflow-auto px-5'>
+                <Sidebar ></Sidebar>
+                <div className='lg:w-9/12 w-full overflow-auto px-5'>
                     <p className='font-semibold py-5'>We found <span className='text-primary'>{listingProducts?.length}</span> items for you!</p>
 
-                    <div className='grid grid-cols-3 gap-8'>
+                    <div className='grid lg:grid-cols-3 grid-cols-2 gap-8'>
                         {
                             listingProducts?.map(product => <ProductsCard key={product._id} product={product}></ProductsCard>)
                         }

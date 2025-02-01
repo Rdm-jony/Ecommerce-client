@@ -19,6 +19,7 @@ const SignUp = () => {
         const { email, password, name, phone } = data;
         disPatch(createUser({ email, password, name, phoneNumber: phone })).then(value => {
             if (value.meta.requestStatus == "fulfilled") {
+                navigate("/")
                 return toast.success("successfully Logged in!")
             }
             if (value.error) {
@@ -35,6 +36,7 @@ const SignUp = () => {
     const handleGoogleSignIn = async () => {
         disPatch(signInGoogle()).then(value => {
             if (value.meta.requestStatus == "fulfilled") {
+                navigate("/")
                 return toast.success("successfully Logged in!")
             }
             if (value.error) {
@@ -48,8 +50,8 @@ const SignUp = () => {
     }
     return (
         <div>
-            <div className='w-1/3 mx-auto'>
-                <p className='text-3xl my-5'>SignUp</p>
+            <div className='lg:w-1/3 mx-auto'>
+                <p className='text-3xl my-5 text-center'>SignUp</p>
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
                     <label className="input input-bordered flex items-center gap-2">
                         Full Name

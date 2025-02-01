@@ -1,14 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Slider from '@mui/material/Slider'
 import Rating from 'react-rating'
 import { FaRegStar, FaStar } from 'react-icons/fa'
 import asideBanner1 from '../../assets/asideBanner1.webp'
 import asideBanner2 from '../../assets/asideBanner2.webp'
-import { setCategory, setPriceRange, setRating, setSubCategory } from '../../Redux/Features/ProuctListingSlice';
+import { setCategory, setMaxPrice, setPriceRange, setRating, setSubCategory } from '../../Redux/Features/ProuctListingSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetCategoryQuery } from '../../Redux/api/baseApi';
+import { useGetCategoryQuery, useGetMaxPriceQuery } from '../../Redux/api/baseApi';
 import { Box } from '@mui/material';
+import BtnLoader from '../BtnLoader/BtnLoader';
+import { useLocation } from 'react-router-dom';
 
 
 function valuetext(value) {
@@ -16,15 +18,31 @@ function valuetext(value) {
 }
 
 const Sidebar = () => {
+    const location = useLocation()
     const disPatch = useDispatch()
-    const { priceRange, category } = useSelector((state) => state.productListingSlice)
+    const { priceRange, category, maxPrice } = useSelector((state) => state.productListingSlice)
+    const { data: price, isLoading } = useGetMaxPriceQuery(category ? category : location?.state?.categoryName)
     const { data: categories } = useGetCategoryQuery()
+    console.log(price)
+
+    useEffect(() => {
+        if (price) {
+            const maxPriceValue = parseInt(price?.maxPrice);
+            disPatch(setMaxPrice(maxPriceValue))
+            disPatch(setPriceRange([0, maxPriceValue]))
+        }
+
+
+    }, [price,disPatch])
+
     const handleChange = (event, newValue) => {
         disPatch(setPriceRange(newValue))
     };
-
+    if (isLoading) {
+        return <BtnLoader></BtnLoader>
+    }
     return (
-        <aside className="flex flex-col w-3/12  px-5 py-2  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+        <aside className="lg:flex hidden flex-col w-3/12  px-5 py-2  bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
 
             <div className="flex flex-col justify-between   flex-1 mt-6  ">
                 <div className='sticky top-20 '>
@@ -50,7 +68,7 @@ const Sidebar = () => {
                             <Slider
                                 sx={{ color: "#16a34a" }}
                                 min={0}
-                                max={80000}
+                                max={parseInt(price?.maxPrice)}
                                 getAriaLabel={() => 'Temperature range'}
                                 value={priceRange}
                                 onChange={handleChange}

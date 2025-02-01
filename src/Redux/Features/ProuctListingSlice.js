@@ -3,8 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     category: "",
     subCategory: "",
-    priceRange: [0, 80000],
-    rating: ""
+    priceRange: [],
+    rating: "",
+    maxPrice:null
 
 }
 export const productListingSlice = createSlice({
@@ -20,14 +21,18 @@ export const productListingSlice = createSlice({
             state.subCategory = payload
         },
         setPriceRange: (state, { payload }) => {
+            console.log(payload)
             state.priceRange = payload
         },
         setRating: (state, { payload }) => {
 
             state.rating = payload
+        },
+        setMaxPrice:(state,{payload})=>{
+            state.maxPrice=payload
         }
 
     }
 })
-export const { setCategory, setSubCategory, setPriceRange, setRating } = productListingSlice.actions
+export const { setCategory, setSubCategory, setPriceRange, setRating,setMaxPrice } = productListingSlice.actions
 export default productListingSlice.reducer

@@ -18,9 +18,9 @@ const PopularProducts = () => {
     }
     return (
         <div >
-            <div className="flex gap-20">
+            <div className="flex lg:flex-row flex-col lg:gap-20 overflow-hidden">
                 <h2 className="text-3xl font-semibold my-5">Popular Products</h2>
-                <div className="flex justify-between flex-1 items-center">
+                <div className="flex overflow-x-auto gap-5 lg:gap-0 justify-between flex-1 items-center mb-10">
                     {
                         categories?.map((cat, idx) => <li onClick={() => {
                             setIndex(idx)
@@ -29,7 +29,7 @@ const PopularProducts = () => {
                     }
                 </div>
             </div>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-3">
                 {
                     popularProducts?.map(product=> <ProductsCard key={product._id} product={product}></ProductsCard>)
                 }

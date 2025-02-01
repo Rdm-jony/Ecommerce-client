@@ -13,7 +13,7 @@ import Reviews from '../../Components/Reviews/Reviews';
 import RelatedProducts from '../../Components/RelatedProducts/RelatedProducts';
 import { useAddToCartMutation, useGetProductsByIdQuery } from '../../Redux/api/baseApi';
 import BtnLoader from '../../Components/BtnLoader/BtnLoader';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -22,7 +22,9 @@ const Details = () => {
     const { email } = useSelector((state) => state.authenticationSlice)
     const [setCartInfo] = useAddToCartMutation()
     const { id } = useParams()
+    const navigate=useNavigate()
     const location = useLocation()
+    console.log(location)
     const { data: product, isLoading } = useGetProductsByIdQuery(id)
     const [image, setImage] = useState(null)
     const [index, setIndex] = useState(0)
@@ -51,6 +53,9 @@ const Details = () => {
     const { productName, productCategory, productImage, discount, productDescription, price, productStock, oldPrice, locationCountry, rams, weight, brand, rating, subCategory, _id, productSize, productReviews, avgRating } = product;
     const additionInfo = { Category: productCategory, Brand: brand, Subcategory: subCategory, Rams: rams, Weight: weight, "Product Stock": productStock, "Available country": locationCountry.join(" , ") }
     const handleAddToCart = async () => {
+        if(!email){
+           return navigate("/signIn",{state:location.pathname})
+        }
         if (!size) {
             return toast.error('please select product size!')
         }
@@ -136,13 +141,14 @@ const Details = () => {
                     </div>
                 </div>
             </div>
-            <div className='border-2 p-16 my-10 dark:bg-dark'>
-                <div className='flex gap-20'>
+            <div className='border-2 lg:p-16 my-10 dark:bg-dark'>
+                
+                <div className='flex lg:gap-20 gap-5'>
                     <button onClick={() => setIsActiveInfo(0)} className={`btn btn-outline hover:bg-gray-100 hover:text-black ${isActiveInfo == 0 ? 'text-primary' : ''}`}>Description</button>
                     <button onClick={() => setIsActiveInfo(1)} className={`btn btn-outline hover:bg-gray-100 hover:text-black ${isActiveInfo == 1 ? 'text-primary' : ''}`}>Addtional Info</button>
                     <button onClick={() => setIsActiveInfo(2)} className={`btn btn-outline hover:bg-gray-100 hover:text-black ${isActiveInfo == 2 ? 'text-primary' : ''}`}>Reviews(1)</button>
                 </div>
-                <div className='py-8'>
+                <div className='py-8 '>
                     {
                         isActiveInfo == 0 && <Description description={productDescription}></Description>
                     }
@@ -155,7 +161,7 @@ const Details = () => {
                 </div>
             </div>
             {
-                location?.pathname == `/dashboard/products/${id}` || <RelatedProducts></RelatedProducts>
+                location?.pathname == `/dashboard/products/${id}` || <RelatedProducts category={productCategory} subCategory={subCategory}></RelatedProducts>
 
             }
         </div>

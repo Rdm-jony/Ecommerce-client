@@ -30,8 +30,8 @@ const Checkout = () => {
         return <BtnLoader></BtnLoader>
     }
     return (
-        <form className='flex gap-8' onSubmit={handleSubmit(onSubmit)}>
-            <div className='w-2/3'>
+        <form className='lg:flex gap-8' onSubmit={handleSubmit(onSubmit)}>
+            <div className='lg:w-2/3'>
                 <h2 className='font-semibold py-5 text-2xl'>BILLING DETAILS</h2>
                 <div className='space-y-4'>
                     <div className='flex gap-8'>
@@ -86,7 +86,7 @@ const Checkout = () => {
                     </div>
                 </div>
             </div>
-            <div className='w-1/3 mt-5'>
+            <div className='lg:w-1/3 mt-5'>
                 <div className='bg-gray-100 p-5 rounded-md sticky top-20'>
                     <h2 className='font-semibold text-xl'>YOUR ORDER</h2>
                     <hr />

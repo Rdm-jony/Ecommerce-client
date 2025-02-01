@@ -9,14 +9,13 @@ import Facilities from './Facilities/Facilities';
 
 const Home = () => {
     return (
-        <div>
+        <div className='space-y-5'>
             <Banner></Banner>
             <Category></Category>
             <PopularProducts></PopularProducts>
             <AdsCards></AdsCards>
-            {/* <FeaturedProducts ></FeaturedProducts> */}
-            <Subscribe></Subscribe>
-            <Facilities></Facilities>
+            <FeaturedProducts ></FeaturedProducts>
+            
         </div>
     );
 };

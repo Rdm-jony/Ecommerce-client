@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { auth } from "../../Firebase/firebase.config";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -11,7 +11,7 @@ export const createUser = createAsyncThunk('createUser', async ({ email, passwor
     await updateProfile(auth.currentUser, {
         displayName: name, phoneNumber: phoneNumber
     })
-    const { result } = await axios.put('http://localhost:5000/users', { email, name, phoneNumber })
+    const { result } = await axios.put('https://ecommerce-server-flax-eight.vercel.app/users', { email, name, phoneNumber })
     if (result?.acknowledged) {
         return rejectWithValue = "database error!"
     }
@@ -25,7 +25,7 @@ export const createUser = createAsyncThunk('createUser', async ({ email, passwor
 
 export const signInGoogle = createAsyncThunk('signGoogle', async () => {
     const data = await signInWithPopup(auth, provider)
-    const { result } = await axios.put('http://localhost:5000/users', { email: data.user.email, name: data.user.displayName, phoneNumber: data.user.phoneNumber })
+    const { result } = await axios.put('https://ecommerce-server-flax-eight.vercel.app/users', { email: data.user.email, name: data.user.displayName, phoneNumber: data.user.phoneNumber, })
     if (result?.acknowledged) {
         return rejectWithValue = "database error!"
     }
@@ -72,6 +72,7 @@ export const authenticationSlice = createSlice({
 
         },
         setLogOut: (state) => {
+
             state.name = "",
                 state.email = "",
                 state.status = false,
@@ -79,6 +80,7 @@ export const authenticationSlice = createSlice({
                 state.isLoading = false,
                 state.isError = false,
                 state.error = ""
+
         }
 
     },
@@ -103,7 +105,7 @@ export const authenticationSlice = createSlice({
         }).addCase(createUser.rejected, (state, action) => {
             state.email = "",
                 state.name = "",
-                state.isLoading = true,
+                state.isLoading = false,
                 state.phoneNumber = "",
                 state.isError = true,
                 state.error = action.error.message,
@@ -165,4 +167,4 @@ export const authenticationSlice = createSlice({
 
 })
 
-export const { setUser,setLogOut } = authenticationSlice.actions
+export const { setUser, setLogOut } = authenticationSlice.actions

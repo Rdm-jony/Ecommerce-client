@@ -5,16 +5,22 @@ import useGetDataPublic from "../../Hooks/useGetDataPublic";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory, setSubCategory } from "../../Redux/Features/ProuctListingSlice";
 import { Link, NavLink } from "react-router-dom";
+import logo from '../../assets/logo.jpg'
+import { IoCartOutline } from "react-icons/io5";
+import { useGetAllCartsQuery } from "../../Redux/api/baseApi";
 
 const Navbar = () => {
     const disPatch = useDispatch()
     const { category } = useSelector((state) => state.productListingSlice)
+    const { email } = useSelector((state) => state.authenticationSlice)
+    const { data: carts } = useGetAllCartsQuery(email)
+
     const [data, loading, refetch] = useGetDataPublic('category', '/category', [])
 
     return (
-        <div className="navbar bg-base-100 dark:bg-dark sticky top-0 z-20">
-            <div className="navbar-start">
-                <div className="dropdown">
+        <div className="navbar justify-between items-center bg-base-100 dark:bg-dark sticky top-0 z-20">
+            <div className="navbar-start w-20 lg:w-full">
+                <div className="dropdown ">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +47,7 @@ const Navbar = () => {
 
                     </ul>
                 </div>
-                <div className="dropdown">
+                <div className="dropdown lg:block hidden">
                     <div tabIndex={0} role="button" className="btn m-1 bg-primary text-white"><BiCategory /> Browse All Ctegories <IoIosArrowDown />
 
                     </div>
@@ -80,7 +86,22 @@ const Navbar = () => {
                     }
                 </ul>
             </div>
-            <div className="navbar-end gap-5">
+            <div className="block lg:hidden">
+                <img className="w-full" src={logo} alt="Logo" />
+
+            </div>
+            <div className="flex gap-2  lg:hidden items-center mb-0">
+                <Link to="/carts">
+                    <div className="indicator">
+                        <IoCartOutline className="text-2xl" />
+                        <span className="badge bg-primary text-white badge-sm indicator-item">
+                            {carts?.result?.length || 0}
+                        </span>
+                    </div>
+                </Link>
+                <p>Cart</p>
+            </div>
+            <div className="navbar-end gap-5 lg:block hidden">
                 <MdHeadphones className="text-3xl" />
                 <div>
                     <h2 className="text-primary">1900 - 888</h2>
